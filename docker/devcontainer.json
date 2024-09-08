@@ -1,0 +1,20 @@
+{
+    "name": "VS Code Bridge to PHP",
+    "dockerFile": "Dockerfile",
+    "context": "..",
+    "appPort": [80],
+    "workspaceFolder": "/workspace",
+    "customizations": {
+        "vscode": {            
+            "extensions": [
+                "felixfbecker.php-intellisense",
+                "bmewburn.vscode-intelephense-client",
+                "neilbrayfield.php-docblocker"
+            ],
+            "settings": {
+                "php.validate.executablePath": "/usr/local/bin/php",
+                "php.executablePath": "/usr/local/bin/php"
+            }
+        }
+    }
+}
