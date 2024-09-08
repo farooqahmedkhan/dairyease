@@ -11,15 +11,30 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('users')) {
+            Schema::create('users', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+    
+                $table->string('email')->unique()->nullable();
+                $table->timestamp('email_verified_at')->nullable();
+    
+                $table->string('phone')->unique()->nullable();
+                $table->string('phone_verified_at')->nullable();
+    
+                $table->string('password');
+    
+                $table->enum('role', ['CUSTOMER', 'PROVIDER', 'CUSTOMER_PROVIDER', 'SUPER_ADMIN', 'ADMIN', 'GUEST'])->default('GUEST');
+                
+                $table->timestamp('last_login_at');
+                $table->string('last_login_ip', 20);
+    
+                $table->boolean('active')->default(true);
+    
+                $table->rememberToken();
+                $table->timestamps();
+            });
+        }
     }
 
     /**
