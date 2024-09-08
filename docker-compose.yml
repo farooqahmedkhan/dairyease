@@ -32,39 +32,9 @@ services:
             test: ["CMD", "redis-cli", "ping"]
             retries: 3
             timeout: 5s
-    # mysql:
-    #     image: mysql:8.0        
-    #     volumes:
-    #         - carehub_mysql:/var/lib/mysql
-    #     environment:
-    #         - MYSQL_ROOT_PASSWORD=audience
-    #         - MYSQL_DATABASE=carehub
-    #         - MYSQL_USER=carehub_portal
-    #         - MYSQL_PASSWORD=audience
-    #     ports:
-    #       - '3306:3306'
-    #     networks:
-    #         carehub:
-    #             aliases:
-    #               - mysql-carehub
-    # phpmyadmin:
-    #     image: phpmyadmin/phpmyadmin
-    #     links:
-    #         - mysql
-    #     environment:
-    #         PMA_HOST: mysql-carehub
-    #         PMA_PORT: 3306
-    #     ports:
-    #         - '8080:80'
-    #     networks:
-    #         carehub:
-    #             aliases:
-    #                 - phpmyadmin
 networks:
     dairyease:
         driver: bridge
 volumes:    
     dairyease_redis:
         driver: local
-    # carehub_mysql:
-    #     driver: local
