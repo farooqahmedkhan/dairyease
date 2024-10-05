@@ -1,0 +1,40 @@
+version: '3.5'
+services:
+    app:
+        build: .
+        image: dairyease
+        ports:            
+            - 80:80
+        volumes:
+            - '/home/farooq/work/dairyease:/var/www/html'
+        networks:
+            - dairyease
+        environment:        
+            UID: 1000            
+        depends_on:            
+            - redis                
+            # - mysql
+        healthcheck:
+            test: ["CMD", "chown", "-R" , "farooq:farooq", "/var/www/html"]
+            retries: 3
+            timeout: 5s
+    redis:
+        image: 'redis:alpine'
+        ports:
+            - '6379:6379'        
+        networks:
+            dairyease:
+                aliases:
+                  - dairyease-redis
+        volumes:
+          - 'dairyease_redis:/data'
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            retries: 3
+            timeout: 5s
+networks:
+    dairyease:
+        driver: bridge
+volumes:    
+    dairyease_redis:
+        driver: local
