@@ -31,19 +31,25 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'name'     => 'required|string|max:255',
+            'email'    => 'required_without:phone|string|max:255|email|unique:' . \App\Models\User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'role'     => 'required|in:CUSTOMER,PROVIDER'
         ]);
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name'     => $request->name,
+            'email'    => $request->email,
             'password' => Hash::make($request->password),
+            'role'     => $request->role
         ]);
 
-        event(new Registered($user));
+        // Send verification via selected provider
+        $session_token = app('verifier')->sendVerificationDetail($user);        
+        $user->setPhoneVerificationSessionToken($session_token);
 
+        event(new Registered($user));
+        
         Auth::login($user);
 
         return redirect(RouteServiceProvider::HOME);
